@@ -1,6 +1,7 @@
 package ch.heigvd.pro.b04.android.Home;
 
 import android.graphics.Color;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashSet;
@@ -52,7 +54,9 @@ public class EmojiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (position) {
             case 0:
-
+                ((HeaderViewHolder) holder).setTitle(
+                        state.getSelectedEmoji()
+                );
                 break;
             default:
                 ((EmojiViewHolder) holder).bindEmoji(
@@ -84,8 +88,12 @@ public class EmojiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             title = itemView.findViewById(R.id.home_title_emoji);
         }
 
-        private void setTitle(String t) {
-            title.setText(t);
+        private void setTitle(LiveData<Set<Emoji>> emoji) {
+            if(emoji.getValue() == null) {
+                title.setText(R.string.home_welcome);
+                return;
+            }
+            title.setText("");
         }
     }
 

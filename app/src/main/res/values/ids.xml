@@ -4,6 +4,7 @@
     <item type="id" name="home_emoji_view" />
     <item type="id" name="home_emoji_item" />
     <item type="id" name="home_title_emoji" />
+    <item type="id" name="home_title_txt" />
 
     <!-- Poll -->
     <item type="id" name="poll_questions_view" />

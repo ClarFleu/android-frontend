@@ -11,7 +11,7 @@
 
     <TextView
         style="?attr/textAppearanceHeadline4"
-        android:id="@id/home_title_emoji"
+        android:id="@id/home_title_txt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
