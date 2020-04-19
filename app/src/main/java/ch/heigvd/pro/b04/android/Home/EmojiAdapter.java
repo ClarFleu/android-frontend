@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -75,10 +76,16 @@ public class EmojiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private TextView title;
 
         public HeaderViewHolder(@NonNull ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.home_title, parent, false));
+            title = itemView.findViewById(R.id.home_title_emoji);
+        }
+
+        private void setTitle(String t) {
+            title.setText(t);
         }
     }
 
