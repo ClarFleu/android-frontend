@@ -51,6 +51,7 @@ public class EmojiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (position) {
             case 0:
+
                 break;
             default:
                 ((EmojiViewHolder) holder).bindEmoji(
