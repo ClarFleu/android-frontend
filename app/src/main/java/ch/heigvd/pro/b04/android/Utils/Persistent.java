@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import ch.heigvd.pro.b04.android.Datamodel.Answer;
@@ -56,8 +60,24 @@ public final class Persistent {
                 dataSP, Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
-        String json = preferences.getString(answerList, "Empty");
-        List answers = gson.fromJson(json, List.class);
+        String json = preferences.getString(answerList, defValue);
+        ArrayList list = gson.fromJson(json, (Type) List.class);
+        List<Answer> answers = new LinkedList<>();
+
+        for (Object obj :
+                list) {
+            LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) obj;
+
+            answers.add(new Answer(
+                    map.get("idModerator"),
+                    map.get("idPoll"),
+                    map.get("idQuestion"),
+                    map.get("idAnswer"),
+                    map.get("title"),
+                    map.get("description"),
+                    map.get("selected")));
+            //answers.add((Answer) obj);
+        }
 
         if (answers.equals(defValue)) {
             throw new AnswersNotSetException();
@@ -68,9 +88,31 @@ public final class Persistent {
 
     public static void writeAnswers(Context context, List<Answer> answers) {
         Gson gson = new Gson();
+        String defValue = "Empty";
+        String newAnswers;
+        SharedPreferences preferences = context.getSharedPreferences(
+                dataSP, Context.MODE_PRIVATE);
+
+        if (preferences.getString(answerList, defValue).equals(defValue)) {
+            List answersToAdd = null;
+            for(Answer answer : answers) {
+                answersToAdd.add(answer.toStringMap());
+            }
+            newAnswers = gson.toJson(answersToAdd);
+        } else {
+            String json = preferences.getString(answerList, defValue);
+            List oldAnswers = gson.fromJson(json, List.class);
+            for (Answer answer : answers) {
+                if (!oldAnswers.contains(answer)) {
+                    oldAnswers.add(answer.toStringMap());
+                }
+            }
+            newAnswers = gson.toJson(oldAnswers);
+        }
+
         context.getSharedPreferences(dataSP, Context.MODE_PRIVATE)
                 .edit()
-                .putString(answerList, gson.toJson(answers))
+                .putString(answerList, newAnswers)
                 .apply();
     }
 }

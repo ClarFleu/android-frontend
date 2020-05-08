@@ -1,5 +1,6 @@
 package ch.heigvd.pro.b04.android.Question;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import ch.heigvd.pro.b04.android.Datamodel.Answer;
 import ch.heigvd.pro.b04.android.R;
+import ch.heigvd.pro.b04.android.Utils.Exceptions.AnswersNotSetException;
+import ch.heigvd.pro.b04.android.Utils.Persistent;
 
 public class QuestionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private static final int VIEW_TYPE_HEADER = 0;
@@ -26,14 +29,27 @@ public class QuestionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<Answer> answers = new LinkedList<>();
 
-    public QuestionAdapter(QuestionViewModel state, LifecycleOwner lifecycleOwner) {
+    public QuestionAdapter(QuestionViewModel state, LifecycleOwner lifecycleOwner, Context context) {
         this.lifecycleOwner = lifecycleOwner;
         this.state = state;
         setHasStableIds(true);
 
         state.getCurrentAnswers().observe(lifecycleOwner, newAnswers -> {
             answers.clear();
-            answers.addAll(newAnswers);
+            List<Answer> storedAnswers;
+            try {
+                storedAnswers = Persistent.getStoredAnswersOrError(context);
+            } catch (AnswersNotSetException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            for (Answer answer : storedAnswers) {
+                if(newAnswers.contains(answer)) {
+                    answers.add(answer);
+                }
+            }
+            //answers.addAll(newAnswers);
             notifyDataSetChanged();
         });
     }

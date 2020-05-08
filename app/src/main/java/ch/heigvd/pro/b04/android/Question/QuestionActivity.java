@@ -43,11 +43,15 @@ public class QuestionActivity extends AppCompatActivity {
         state.setCurrentQuestion(question);
         state.getAllQuestionsFromBackend(poll, token);
 
+        state.getCurrentAnswers().observe(this, answers -> {
+            Persistent.writeAnswers(this, answers);
+        });
+
         RecyclerView answerList = findViewById(R.id.question_answers_view);
         answerList.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager manager = new LinearLayoutManager(this);
 
-        QuestionAdapter questionAdapter = new QuestionAdapter(state, this);
+        QuestionAdapter questionAdapter = new QuestionAdapter(state, this, getApplicationContext());
 
         answerList.setAdapter(questionAdapter);
         answerList.setLayoutManager(manager);

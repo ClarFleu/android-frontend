@@ -1,6 +1,7 @@
 package ch.heigvd.pro.b04.android.Datamodel;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Objects;
 
@@ -25,6 +26,16 @@ public class Answer {
 
     @SerializedName("checked")
     private boolean selected;
+
+    public Answer(String idModerator, String idPoll, String idQuestion, String idAnswer, String title, String description, String selected) {
+        this.idModerator = idModerator;
+        this.idPoll = idPoll;
+        this.idQuestion = Long.getLong(idQuestion);
+        this.idAnswer = Long.getLong(idAnswer);
+        this.title = title;
+        this.description = description;
+        this.selected = Boolean.getBoolean(selected);
+    }
 
     public String getIdModerator() {
         return idModerator;
@@ -69,5 +80,19 @@ public class Answer {
                 Objects.equals(idQuestion, answer.idQuestion) &&
                 Objects.equals(title, answer.title) &&
                 Objects.equals(description, answer.description);
+    }
+
+    public LinkedTreeMap<String, String> toStringMap() {
+        LinkedTreeMap<String, String> map = new LinkedTreeMap<>();
+
+        map.put("idModerator", idModerator);
+        map.put("idPoll", idPoll);
+        map.put("idQuestion", "" + idQuestion);
+        map.put("idAnswer", "" + idAnswer);
+        map.put("title", title);
+        map.put("description", description);
+        map.put("selected", "" + selected);
+
+        return map;
     }
 }
